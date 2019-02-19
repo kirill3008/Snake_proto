@@ -52,13 +52,13 @@ class Game(object):
                     for i in field[i][j]:
                         if type(i) == type(SnakeHead(-1)):
                             in_cell_heads.append(i.id_snake)
-                        elif type(i) == type(SnakeTail()):
+                        elif type(i) in [SnakeTail, Wall]:
                             can_die = True
                     if len(in_cell_heads)>1 or can_die:
                         to_kill += in_cell_heads
         for i in to_kill:
             for j in range(len(self.board.snakes)):
-                if i == j[0].id:
+                if i == j[0].id_snake:
                     self.board.snakes.pop(j)
                     break
 
@@ -103,7 +103,7 @@ class Board(object):
             field[food[0]][food[1]].append(Food())
         for snake in self.snakes:
             field[snake[1][0]][snake[1][1]].append(SnakeHead(id_snake))
-            for i in snakes[0].get_struct():
+            for i in snake[0].get_struct():
                 pass
         return field
     def get_field(self):
