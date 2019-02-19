@@ -13,7 +13,7 @@ class Game(object):
         if pos is None:
             plaсe = self.board.get_free_cell()
             plaсe = [plaсe // 1000 , plaсe % 1000]
-        snake = Snake(alg = alg,self.board.max_id)
+        snake = Snake(self.board.max_id,alg = alg)
         self.board.max_id +=1 
         self.board.snakes.append([snake,plaсe])
 
@@ -50,15 +50,15 @@ class Game(object):
                     in_cell_heads = []
                     can_die = False
                     for i in field[i][j]:
-                        if type(i) = type(SnakeHead(-1)):
-                            in_cell_heads.append(i.id)
-                        elif type(i) = type(SnakeTail()):
+                        if type(i) == type(SnakeHead(-1)):
+                            in_cell_heads.append(i.id_snake)
+                        elif type(i) == type(SnakeTail()):
                             can_die = True
                     if len(in_cell_heads)>1 or can_die:
                         to_kill += in_cell_heads
         for i in to_kill:
             for j in range(len(self.board.snakes)):
-                if i = j[0].id:
+                if i == j[0].id:
                     self.board.snakes.pop(j)
                     break
 
@@ -66,9 +66,9 @@ class Game(object):
 
     
     def __str__(self):
+        pass
 
         #return '\n'.join([''.join(list(map(str,i))) for i in self.map])
-
 
 class Board(object):
     def __init__(self,length = FIELD_LENGTH,width = FIELD_WIDTH,field_map=FIELD_MAP_FILE):
@@ -100,10 +100,9 @@ class Board(object):
     def gen_field(self):
         field = deepcopy(self.map)
         for food in self.food:
-            if 
             field[food[0]][food[1]].append(Food())
         for snake in self.snakes:
-            field[snake[1][0]][snake[1][1]].append(SnakeHead(id))
+            field[snake[1][0]][snake[1][1]].append(SnakeHead(id_snake))
             for i in snakes[0].get_struct():
                 pass
         return field
@@ -113,11 +112,11 @@ class Board(object):
         
 
 class Snake(object):
-    def __init__(self,alg = Algorithm(),id):
+    def __init__(self, alg = Algorithm(), id_snake):
         self.alg = alg
         self.len = 1
         self.skelet = []
-        self.id = id
+        self.id_snake = id_snake
 
     def get_struct(self):
         return self.skelet
@@ -140,8 +139,8 @@ class Food(object):
     def __str__(self):
         return '*'
 class SnakeHead(object):
-    def __init__(self,id):
-        self.id
+    def __init__(self,id_snake):
+        self.id_snake = id_snake
     def __str__(self):
         return 'O'
 class SnakeTail(object):
