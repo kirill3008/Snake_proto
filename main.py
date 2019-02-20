@@ -39,27 +39,27 @@ class Game(object):
                 snake[1][1]+=1
         self.test_field()
 
-        if len(self.snakes)==0:
+        if len(self.board.snakes)==0:
             self.game_over = True
     def test_field(self):
         field = self.board.gen_field()
         to_kill = []
         for i in range(self.board.width):
             for j in range(self.board.length):
-                print(i,j)
+                #print(type(i),type(j))
                 if len(field[i][j])>1:
                     in_cell_heads = []
                     can_die = False
-                    for i in field[i][j]:
-                        if type(i) == type(SnakeHead(-1)):
-                            in_cell_heads.append(i.id_snake)
-                        elif type(i) in [SnakeTail, Wall]:
+                    for k in field[i][j]:
+                        if type(k) == type(SnakeHead(-1)):
+                            in_cell_heads.append(k.id_snake)
+                        elif type(k) in [SnakeTail, Wall]:
                             can_die = True
                     if len(in_cell_heads)>1 or can_die:
                         to_kill += in_cell_heads
         for i in to_kill:
             for j in range(len(self.board.snakes)):
-                if i == j[0].id_snake:
+                if i == self.board.snakes[j][0].id_snake:
                     self.board.snakes.pop(j)
                     break
 
@@ -67,7 +67,7 @@ class Game(object):
 
     
     def __str__(self):
-        pass
+        return ''
 
         #return '\n'.join([''.join(list(map(str,i))) for i in self.map])
 
