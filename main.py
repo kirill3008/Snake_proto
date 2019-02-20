@@ -13,7 +13,7 @@ class Game(object):
         if pos is None:
             plaсe = self.board.get_free_cell()
             plaсe = [plaсe // 1000 , plaсe % 1000]
-        snake = Snake(self.board.max_id,alg = alg)
+        snake = Snake(self.board.max_id)
         self.board.max_id +=1 
         self.board.snakes.append([snake,plaсe])
 
@@ -42,10 +42,11 @@ class Game(object):
         if len(self.snakes)==0:
             self.game_over = True
     def test_field(self):
-        field = self.board.get_field()
+        field = self.board.gen_field()
         to_kill = []
         for i in range(self.board.width):
             for j in range(self.board.length):
+                print(i,j)
                 if len(field[i][j])>1:
                     in_cell_heads = []
                     can_die = False
@@ -77,7 +78,7 @@ class Board(object):
         for i in range(width):
             line = []
             for j in range(length):
-                if field_map.read(1) == '#':
+                if file.read(1) == '#':
                     line.append([Wall()])
                 else:
                     line.append([None])
@@ -102,7 +103,7 @@ class Board(object):
         for food in self.food:
             field[food[0]][food[1]].append(Food())
         for snake in self.snakes:
-            field[snake[1][0]][snake[1][1]].append(SnakeHead(id_snake))
+            field[snake[1][0]][snake[1][1]].append(SnakeHead(snake[0].id_snake))
             for i in snake[0].get_struct():
                 pass
         return field
@@ -111,8 +112,15 @@ class Board(object):
 
         
 
+class Algorithm(object):
+    def __init__(self):
+        pass
+    def get_dir(self,snakes,food,map,self_pos):
+        direction = 'left'
+        return direction
+
 class Snake(object):
-    def __init__(self, alg = Algorithm(), id_snake):
+    def __init__(self, id_snake, alg = Algorithm()):
         self.alg = alg
         self.len = 1
         self.skelet = []
@@ -152,14 +160,8 @@ class SnakeTail(object):
 
 
 
-class Algorithm(object):
-    def __init__(self):
-        pass
-    def get_dir(self,snakes,food,map,self_pos):
-        direction = None
-        return direction
-
 game = Game()
-while game.game_status()!=0:
+game.create_snake()
+while game.is_game_over()==False:
     game.move()
     print(game)
