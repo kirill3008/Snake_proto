@@ -1,23 +1,31 @@
-from random import choice
+from random import choice, random
 from copy import deepcopy
 
+from algorithm import LeftAlgorithm, RightAlgorithm, Algorithm, EndlessAlgorithm
 from config import *
 from exceptions import InternalError
 
 
+import cProfile
+
+
+def discrete_random(p):
+    return random() < p
+
 class Game(object):
     def __init__(self):
-        self.board = Board()
+        self.food = []
+        self.board = Board(self.food)
         self.game_over = False
 
     def create_snake(self,alg=None,pos=None):
         if pos is None:
             pos = self.board.get_free_cell()
-        snake = Snake(self.board.max_id)
+        snake = Snake(self.board.max_id,alg=alg)
         self.board.max_id +=1 
         self.board.snakes.append([snake,pos])
 
-    def create_food(self,how_much,pos):
+    def create_food(self,how_much = FOOD_PER_MOVE):
         """
         if pos is None:
             place = self.board.get_free_cell()
@@ -26,14 +34,17 @@ class Game(object):
         """
         free_cells = self.board.free_cells()
         for cell in free_cells:
-            prob = how_much * how_often / len(free_cells)
+            prob = how_much / len(free_cells)
+            if discrete_random(prob):
+                self.food.append(cell)
+
 
     def is_game_over(self):
         return self.game_over
 
     def move(self):
         for snake in self.board.snakes:
-            direction = snake[0].get_dir(self.board.snakes,self.board.food,self.board.map,snake[1])
+            direction = snake[0].move(self.board.snakes,self.board.food,self.board.map,snake[1])
             if direction == 'up':
                 snake[1][0]-=1
             elif direction == 'down':
@@ -43,11 +54,13 @@ class Game(object):
             else:
                 snake[1][1]+=1
         self.test_field()
+        self.create_food()
 
         if len(self.board.snakes)==0:
             print("No more snakes")
             self.game_over = True
         print(self.board)
+
     def test_field(self):
         field = self.board.raw_field()
         to_kill = []
@@ -57,11 +70,20 @@ class Game(object):
                 if len(field[i][j])>1:
                     in_cell_heads = []
                     can_die = False
+                    in_cell_food = False
                     for k in field[i][j]:
                         if type(k) == type(SnakeHead(-1)):
                             in_cell_heads.append(k.id_snake)
                         elif type(k) in [SnakeTail, Wall]:
                             can_die = True
+                        elif type(k) ==  Food:
+                            in_cell_food = True
+                    if in_cell_food:
+                        for l in in_cell_heads:
+                            for k in range(len(self.board.snakes)):
+                                if l == self.board.snakes[k][0].id_snake:
+                                    self.board.snakes[k][0].eat()
+                        self.food.remove([i,j])
                     if len(in_cell_heads)>1 or can_die:
                         to_kill += in_cell_heads
         for i in to_kill:
@@ -73,7 +95,7 @@ class Game(object):
 
 
 class Board(object):
-    def __init__(self,length = FIELD_LENGTH,width = FIELD_WIDTH,field_map=FIELD_MAP_FILE):
+    def __init__(self, food, length = FIELD_LENGTH, width = FIELD_WIDTH, field_map=FIELD_MAP_FILE):
         file = open(field_map)
         self.map = []
         for lines in file.readlines():
@@ -87,7 +109,7 @@ class Board(object):
         self.width = width
         self.length = length
         self.snakes = []
-        self.food = []
+        self.food = food
         self.max_id = 0
 
     def get_free_cell(self):
@@ -103,10 +125,11 @@ class Board(object):
 
     def free_cells(self):
         result = []
+        field = self.raw_field()
         for i in range(self.width):
             for j in range(self.length):
-                if len(self.raw_field()[i][j])==0:
-                    result.append((i, j))
+                if len(field[i][j])==0:
+                    result.append([i, j])
         return result
 
     def __str__(self):
@@ -139,25 +162,39 @@ class Board(object):
         return result
 
 
-class Algorithm(object):
-    def __init__(self):
-        pass
-    def get_dir(self,snakes,food,map,self_pos):
-        direction = 'left'
-        return direction
+def inversed(dir):
+    dic = {
+        'left':'right',
+        'right':'left',
+        'up':'down',
+        'down':'up'
+    }
+    return dic[dir]
+
 
 class Snake(object):
-    def __init__(self, id_snake, tail_direction , alg = Algorithm()):
+    def __init__(self, id_snake, alg = Algorithm()):
         self.alg = alg
         self.len = 1
         self.skelet = []
         self.id_snake = id_snake
+        self.food = 0
 
     def get_struct(self):
         return self.skelet
 
-    def get_dir(self,snakes,food,map,self_pos):
-        return self.alg.get_dir(snakes,food,map,self_pos)
+    def move(self,snakes,food,map,self_pos):
+        dir =  self.alg.get_dir(snakes,food,map,self_pos)
+        
+        self.skelet.insert(0,inversed(dir))
+        if self.food > 0:
+            self.food -= 1
+        else:
+            self.skelet.pop()
+        return dir
+    def eat(self):
+        self.food += FOOD_COST
+
 
     def body(self):
         result = []
@@ -206,8 +243,12 @@ class SnakeTail(object):
 
 
 
+def main():
+    game = Game()
+    game.create_snake(alg=RightAlgorithm(), pos=[6, 3])
+    game.create_snake(alg=LeftAlgorithm(), pos=[6, 8])
+    while game.is_game_over()==False:
+        game.move()
 
-game = Game()
-game.create_snake()
-while game.is_game_over()==False:
-    game.move()
+#cProfile.run("main()")
+main()
