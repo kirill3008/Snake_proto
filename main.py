@@ -5,7 +5,6 @@ from algorithm import LeftAlgorithm, RightAlgorithm, Algorithm, EndlessAlgorithm
 from config import *
 from exceptions import InternalError
 
-
 import cProfile
 
 
@@ -21,7 +20,12 @@ class Game(object):
     def create_snake(self,alg=None,pos=None):
         if pos is None:
             pos = self.board.get_free_cell()
+        else:
+            if pos[0] < 0 or pos[1] < 0:
+                raise RuntimeError("Coordinates can't be negative")
+
         snake = Snake(self.board.max_id,alg=alg)
+        snake.eat()
         self.board.max_id +=1 
         self.board.snakes.append([snake,pos])
 
@@ -184,14 +188,14 @@ class Snake(object):
         return self.skelet
 
     def move(self,snakes,food,map,self_pos):
-        dir =  self.alg.get_dir(snakes,food,map,self_pos)
-        
+        dir = self.alg.get_dir(snakes,food,map,self_pos)
         self.skelet.insert(0,inversed(dir))
         if self.food > 0:
             self.food -= 1
         else:
             self.skelet.pop()
         return dir
+
     def eat(self):
         self.food += FOOD_COST
 
@@ -245,8 +249,9 @@ class SnakeTail(object):
 
 def main():
     game = Game()
-    game.create_snake(alg=RightAlgorithm(), pos=[6, 3])
+    game.create_snake(alg=RightAlgorithm(), pos=[6, -5])
     game.create_snake(alg=LeftAlgorithm(), pos=[6, 8])
+    print(game.board)
     while game.is_game_over()==False:
         game.move()
 
