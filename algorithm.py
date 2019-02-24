@@ -57,6 +57,13 @@ class FirstStupidAlgorithm(Algorithm):
             'up':(-1,0),
             'down':(1,0)
         }
+        self.inverse = {
+            'left':'right',
+            'right':'left',
+            'up':'down',
+            'down':'up'
+        }
+        self.last_dir = 'None'
     
     def get_dir(self,snakes,food,map,self_pos):
         min_dist = 9000000
@@ -64,11 +71,12 @@ class FirstStupidAlgorithm(Algorithm):
             for i in self.dir_to_coord.keys():
                 new_self_coord = (self_pos[0] + self.dir_to_coord[i][0],self_pos[1] + self.dir_to_coord[i][1])
                 distance = search_min_dist(new_self_coord,food)
-                if distance <=min_dist:
+                if distance <=min_dist and self.inverse[self.last_dir]!=i:
                     dir = i
                     min_dist = distance
         else:
-            return choice(['left','right','up','down'])
+            dir =  choice(['left','right','up','down'])
+        self.last_dir = dir
         return dir
             
             
