@@ -1,7 +1,7 @@
 from random import choice, random
 from copy import deepcopy
 
-from algorithm import LeftAlgorithm, RightAlgorithm, Algorithm, EndlessAlgorithm
+from algorithm import LeftAlgorithm, RightAlgorithm, Algorithm, EndlessAlgorithm, FirstStupidAlgorithm
 from config import *
 from exceptions import InternalError
 
@@ -249,8 +249,7 @@ class SnakeTail(object):
 
 def main():
     game = Game()
-    game.create_snake(alg=RightAlgorithm(), pos=[6, -5])
-    game.create_snake(alg=LeftAlgorithm(), pos=[6, 8])
+    game.create_snake(alg=FirstStupidAlgorithm(), pos=[6, 8])
     print(game.board)
     while game.is_game_over()==False:
         game.move()
