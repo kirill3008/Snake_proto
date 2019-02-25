@@ -188,7 +188,7 @@ class Snake(object):
         return self.skelet
 
     def move(self,snakes,food,map,self_pos):
-        dir = self.alg.get_dir(snakes,food,map,self_pos)
+        dir = self.alg.get_dir(snakes,food,map,self_pos,self.skelet)
         self.skelet.insert(0,inversed(dir))
         if self.food > 0:
             self.food -= 1

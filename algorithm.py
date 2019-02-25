@@ -3,18 +3,18 @@ class Algorithm(object):
     def __init__(self):
         pass
 
-    def get_dir(self,snakes,food,map,self_pos):
+    def get_dir(self,snakes,food,map,self_pos,self_struct):
         raise RuntimeError("Not implemented in base class")
 
 
 class LeftAlgorithm(Algorithm):
-    def get_dir(self,snakes,food,map,self_pos):
+    def get_dir(self,snakes,food,map,self_pos,self_struct):
         direction = 'left'
         return direction
 
 
 class RightAlgorithm(Algorithm):
-    def get_dir(self,snakes,food,map,self_pos):
+    def get_dir(self,snakes,food,map,self_pos,self_struct):
         direction = 'right'
         return direction
 
@@ -24,7 +24,7 @@ class EndlessAlgorithm(Algorithm):
         super(Algorithm, self).__init__()
         self.turn_number = -1
 
-    def get_dir(self,snakes,food,map,self_pos):
+    def get_dir(self,snakes,food,map,self_pos,self_struct):
         self.turn_number += 1
         return {
             0: "left",
@@ -39,9 +39,8 @@ class EndlessAlgorithm(Algorithm):
 
 
 def search_min_dist(snake_coord, food_coord_list):
-    cur_dist = ((snake_coord[0]-food_coord_list[0][0])**2 + 
-                (snake_coord[1]-food_coord_list[0][1])**2)**0.5
-    for coord in food_coord_list[1:0]:
+    cur_dist = 90000
+    for coord in food_coord_list:
         new_dist = ((snake_coord[0]-coord[0])**2 + 
                     (snake_coord[1]-coord[1])**2)**0.5
         cur_dist = min(cur_dist,new_dist)
@@ -65,18 +64,22 @@ class FirstStupidAlgorithm(Algorithm):
         }
         self.last_dir = 'None'
     
-    def get_dir(self,snakes,food,map,self_pos):
+    def get_dir(self,snakes,food,map,self_pos,self_struct):
         min_dist = 9000000
+        self_posit = []
+        pos = self_pos
+        dir = choice(['left','right','up','down'])
+        for i in self_struct:
+            pos = (pos[0]+self.dir_to_coord[i][0],pos[1]+self.dir_to_coord[i][1])
+            self_posit.append(pos)
         if food:
             for i in self.dir_to_coord.keys():
                 new_self_coord = (self_pos[0] + self.dir_to_coord[i][0],self_pos[1] + self.dir_to_coord[i][1])
                 distance = search_min_dist(new_self_coord,food)
-                if distance <=min_dist and self.inverse[self.last_dir]!=i:
+                if distance <=min_dist and self.inverse[self.last_dir]!=i and (new_self_coord not in self_posit):
                     dir = i
                     min_dist = distance
-        else:
-            dir =  choice(['left','right','up','down'])
-        self.last_dir = dir
+        self.last_dir = dir 
         return dir
             
             
