@@ -4,16 +4,22 @@ from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.config import Config
 
 import os
 
-from algorithm import RightAlgorithm
+from algorithm import RightAlgorithm, FirstStupidAlgorithm
 from config import FIELD_WIDTH, FIELD_HEIGHT
 from main import Game, Wall, Food, SnakeHead, SnakeTail
 
 PATH_TO_PICTURES = "img"
 BACKGROUND_IMAGE = "_G9aI67R2tQ.jpg"
 BELKI = "belki.png"
+
+
+Config.set('graphics','resizable','0')
+Config.set('graphics','width','1200')
+Config.set('graphics','height','600')
 
 BUTTON_COLOR = [.97,.69,.59,1]
 
@@ -82,23 +88,23 @@ class MainApp(App):
 
         exit_button = Button(
             text='Quit', on_press=self.leave,
-            size_hint=[0.35, 0.1], pos_hint={'center_x': 1.25, 'center_y': 0.66},
+            size_hint=[0.25, 0.1], pos_hint={'center_x': 1.30, 'center_y': 0.66},
             background_color=BUTTON_COLOR, background_normal=''
         )
         restart_button = Button(
             text='Restart', on_press=self.reset_game_mode,
-            size_hint=[0.35, 0.1], pos_hint={'center_x': 1.25, 'center_y': 0.90},
+            size_hint=[0.25, 0.1], pos_hint={'center_x': 1.30, 'center_y': 0.90},
             background_color=BUTTON_COLOR, background_normal=''
         )
         back_to_menu_button = Button(
             text='Main menu', #on_press=self.back_to_main_menu,
-            size_hint=[0.35, 0.1], pos_hint={'center_x': 1.25, 'center_y': 0.78},
+            size_hint=[0.25, 0.1], pos_hint={'center_x': 1.30, 'center_y': 0.78},
             background_color=BUTTON_COLOR, background_normal=''
         )
 
         make_move_button = Button(
             text='Make move', on_press=self.make_move,
-            size_hint=[0.35, 0.1], pos_hint={'center_x': 1.25, 'center_y': 0.4},
+            size_hint=[0.25, 0.1], pos_hint={'center_x': 1.30, 'center_y': 0.4},
             background_color=BUTTON_COLOR, background_normal=''
         )
 
@@ -114,7 +120,7 @@ class MainApp(App):
 
     def reset_game_mode(self, _):
         self.game = Game()
-        self.game.create_snake(alg=RightAlgorithm(), pos=[6, 8])
+        self.game.create_snake(alg=FirstStupidAlgorithm(), pos=[6, 8])
 
         self.main_layout.remove_widget(self.main_layout.children[0])
         self.main_layout.add_widget(self.game_screen)
@@ -136,7 +142,7 @@ class BoardWidget(GridLayout):
         # create a grid with nothings width x height.
         # store cell elements in self.image_board for convenience.
         super().__init__(
-            pos_hint={'center_x':0.5,'center_y':0.5},
+            pos_hint={'center_x':0.4,'center_y':0.5},
             size_hint=(FIELD_WIDTH/FIELD_HEIGHT, 1),
             cols=FIELD_WIDTH,
             rows=FIELD_HEIGHT
