@@ -5,6 +5,7 @@ from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.config import Config
+from kivy.core.audio import SoundLoader
 
 import os
 
@@ -26,6 +27,10 @@ BUTTON_COLOR = [.97,.69,.59,1]
 
 class MainApp(App):
     def build(self):
+        sound = SoundLoader.load('muzlome_Metallica_-_Sad_But_True_47954412.mp3')
+        sound.play()
+
+
         self.create_start_screen()
         self.create_game_screen()
 
