@@ -63,7 +63,7 @@ class Game(object):
         if len(self.board.snakes)==0:
             print("No more snakes")
             self.game_over = True
-        print(self.board)
+        #print(self.board)
 
     def test_field(self):
         field = self.board.raw_field()
@@ -99,7 +99,7 @@ class Game(object):
 
 
 class Board(object):
-    def __init__(self, food, length = FIELD_LENGTH, width = FIELD_WIDTH, field_map=FIELD_MAP_FILE):
+    def __init__(self, food, length = FIELD_WIDTH, width = FIELD_HEIGHT, field_map=FIELD_MAP_FILE):
         file = open(field_map)
         self.map = []
         for lines in file.readlines():
@@ -217,7 +217,6 @@ class Snake(object):
         return result
 
 
-
 class Wall(object):
     def __init__(self):
         pass
@@ -246,7 +245,6 @@ class SnakeTail(object):
         return '~'
 
 
-
 def main():
     game = Game()
     game.create_snake(alg=FirstStupidAlgorithm(), pos=[6, 8])
@@ -255,4 +253,4 @@ def main():
         game.move()
 
 #cProfile.run("main()")
-main()
+#main()
