@@ -137,7 +137,7 @@ class BoardWidget(GridLayout):
         # store cell elements in self.image_board for convenience.
         super().__init__(
             pos_hint={'center_x':0.5,'center_y':0.5},
-            size_hint=(1, 1),
+            size_hint=(FIELD_WIDTH/FIELD_HEIGHT, 1),
             cols=FIELD_WIDTH,
             rows=FIELD_HEIGHT
         )
