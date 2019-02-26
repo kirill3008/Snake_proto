@@ -9,7 +9,7 @@ from kivy.core.audio import SoundLoader
 
 import os
 
-from algorithm import RightAlgorithm, FirstStupidAlgorithm
+from algorithm import RightAlgorithm, FirstStupidAlgorithm, RandomAlgorithm
 from config import FIELD_WIDTH, FIELD_HEIGHT
 from main import Game, Wall, Food, SnakeHead, SnakeTail
 
@@ -29,7 +29,6 @@ class MainApp(App):
     def build(self):
         sound = SoundLoader.load('muzlome_Metallica_-_Sad_But_True_47954412.mp3')
         sound.play()
-
 
         self.create_start_screen()
         self.create_game_screen()
@@ -125,7 +124,7 @@ class MainApp(App):
 
     def reset_game_mode(self, _):
         self.game = Game()
-        self.game.create_snake(alg=FirstStupidAlgorithm(), pos=[6, 8])
+        self.game.create_snake(alg=RandomAlgorithm(), pos=[2, 8])
 
         self.main_layout.remove_widget(self.main_layout.children[0])
         self.main_layout.add_widget(self.game_screen)

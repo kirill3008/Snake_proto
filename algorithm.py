@@ -1,4 +1,5 @@
 from random import choice
+
 class Algorithm(object):
     def __init__(self):
         pass
@@ -36,6 +37,27 @@ class EndlessAlgorithm(Algorithm):
             6: "down",
             7: "down"
         }[self.turn_number % 8]
+
+
+class RandomAlgorithm(Algorithm):
+    def get_dir(self, snakes,food,map,self_pos,self_struct):
+        print("Snakes:", snakes)
+        walls = []
+        for i in range(len(map)):
+            for j in range(len(map[0])):
+                if map[i][j]:
+                    walls.append((i, j))
+        bodies = sum([s[0].body() for s in snakes], [])
+        y, x = self_pos
+        variants = zip(
+            [(y-1, x), (y, x-1), (y+1, x), (y, x+1)],
+            ['up', 'left', 'down', 'right']
+        )
+        variants = list(filter(lambda item: not item[0] in bodies and not item[0] in walls, variants))
+        if not variants:
+            return 'left'
+        print("Variants:", variants)
+        return choice(variants)[1]
 
 
 def search_min_dist(snake_coord, food_coord_list):
@@ -82,17 +104,3 @@ class FirstStupidAlgorithm(Algorithm):
                     min_dist = distance
         self.last_dir = dir 
         return dir
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
