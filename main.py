@@ -11,16 +11,30 @@ import cProfile
 def discrete_random(p):
     return random() < p
 
+
+def get_free_cell(board):
+    return choice(free_cells(board))
+
+def free_cells(board):
+    result = []
+    field = board.raw_field()
+    for i in range(board.width):
+        for j in range(board.length):
+            if len(field[i][j])==0:
+                result.append([i, j])
+    return result
+
 class Game(object):
-    # FIXME: algorithms list
-    def __init__(self):
+    def __init__(self,algorithms_list,start_position_list):
         self.food = []
         self.board = Board(self.food)
         self.game_over = False
+        for i in range(len(algorithms_list)):
+            self._create_snake(alg=algorithms_list[i],pos=start_position_list[i])
 
     def _create_snake(self,alg=None,pos=None):
         if pos is None:
-            pos = self.board.get_free_cell()
+            pos = get_free_cell(board)
         else:
             if pos[0] < 0 or pos[1] < 0:
                 raise RuntimeError("Coordinates can't be negative")
@@ -31,9 +45,9 @@ class Game(object):
         self.board.snakes.append([snake,pos])
 
     def _create_food(self,how_much = FOOD_PER_MOVE):
-        free_cells = self.board.free_cells()
-        for cell in free_cells:
-            prob = how_much / len(free_cells)
+        free_cells_list = free_cells(self.board)
+        for cell in free_cells_list:
+            prob = how_much / len(free_cells_list)
             if discrete_random(prob):
                 self.food.append(cell)
 
@@ -54,19 +68,17 @@ class Game(object):
             else:
                 snake[1][1]+=1
         self.test_field()
-        self.create_food()
+        self._create_food()
 
         if len(self.board.snakes)==0:
             print("No more snakes")
             self.game_over = True
-        #print(self.board)
 
     def test_field(self):
         field = self.board.raw_field()
         to_kill = []
         for i in range(self.board.width):
             for j in range(self.board.length):
-                #print(type(i),type(j))
                 if len(field[i][j])>1:
                     in_cell_heads = []
                     can_die = False
@@ -112,19 +124,6 @@ class Board(object):
         self.food = food
         self.max_id = 0
 
-    # FIXME: not class method
-    def get_free_cell(self):
-        return choice(self.free_cells())
-
-    # FIXME: not class method
-    def free_cells(self):
-        result = []
-        field = self.raw_field()
-        for i in range(self.width):
-            for j in range(self.length):
-                if len(field[i][j])==0:
-                    result.append([i, j])
-        return result
 
     def __str__(self):
         def line(lst):
@@ -133,7 +132,7 @@ class Board(object):
         return '\n'.join([line(line_list) for line_list in self.field()])
 
     def at(self, i, j):
-        pass
+        return self.field[i][j]
 
     def raw_field(self):
         field = deepcopy(self.map)
@@ -159,6 +158,7 @@ class Board(object):
         return result
 
 
+    
 def inversed(dir):
     dic = {
         'left':'right',
@@ -251,11 +251,11 @@ class SnakeTail(object):
 
 
 def main():
-    game = Game()
-    game.create_snake(alg=FirstStupidAlgorithm(), pos=[6, 8])
+    game = Game([LeftAlgorithm()],[[6,8]])
     print(game.board)
     while game.is_game_over()==False:
         game.move()
+        print(game.board)
 
 #cProfile.run("main()")
-#main()
+main()
