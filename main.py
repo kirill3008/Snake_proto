@@ -56,7 +56,7 @@ class Game(object):
         return self.game_over
 
     def move(self):
-        Game_state = Game_State(self.food,self.board.snakes,self.board.map)
+        Game_state = Game_State(self.food,self.board.snakes,self.board.map,self.board.field())
         for snake in self.board.snakes:
             direction = snake[0].move(Game_state,snake[1])
             if direction == 'up':
@@ -169,13 +169,14 @@ def inversed(dir):
     return dic[dir]
 
 class Game_State(object):
-    def __init__(self,food,snakes,map):
+    def __init__(self,food,snakes,map,field):
         self.food = food
         self.snakes = snakes
         self.map = map
+        self.field  =field
     
     def at(self, i, j):
-        pass
+        return field[i][j]
     
     def snake(self, id):
         for i in self.snakes:
