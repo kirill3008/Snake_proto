@@ -178,7 +178,9 @@ class Game_State(object):
         pass
     
     def snake(self, id):
-        pass
+        for i in self.snakes:
+            if i[0].id_snake == id:
+                return i
 
 
 class Snake(object):
