@@ -3,18 +3,18 @@ class Algorithm(object):
     def __init__(self):
         pass
 
-    def get_dir(self,snakes,food,map,self_pos,self_struct):
+    def get_dir(self,Game_state,self_pos,self_struct):
         raise RuntimeError("Not implemented in base class")
 
 
 class LeftAlgorithm(Algorithm):
-    def get_dir(self,snakes,food,map,self_pos,self_struct):
+    def get_dir(self,Game_state,self_pos,self_struct):
         direction = 'left'
         return direction
 
 
 class RightAlgorithm(Algorithm):
-    def get_dir(self,snakes,food,map,self_pos,self_struct):
+    def get_dir(self,Game_state,self_pos,self_struct):
         direction = 'right'
         return direction
 
@@ -24,7 +24,7 @@ class EndlessAlgorithm(Algorithm):
         super(Algorithm, self).__init__()
         self.turn_number = -1
 
-    def get_dir(self,snakes,food,map,self_pos,self_struct):
+    def get_dir(self,Game_state,self_pos,self_struct):
         self.turn_number += 1
         return {
             0: "left",
@@ -64,7 +64,8 @@ class FirstStupidAlgorithm(Algorithm):
         }
         self.last_dir = 'None'
     
-    def get_dir(self,snakes,food,map,self_pos,self_struct):
+    def get_dir(self,Game_state,self_pos,self_struct):
+        food = Game_state.food
         min_dist = 9000000
         self_posit = []
         pos = self_pos
