@@ -12,12 +12,13 @@ def discrete_random(p):
     return random() < p
 
 class Game(object):
+    # FIXME: algorithms list
     def __init__(self):
         self.food = []
         self.board = Board(self.food)
         self.game_over = False
 
-    def create_snake(self,alg=None,pos=None):
+    def _create_snake(self,alg=None,pos=None):
         if pos is None:
             pos = self.board.get_free_cell()
         else:
@@ -29,13 +30,7 @@ class Game(object):
         self.board.max_id +=1 
         self.board.snakes.append([snake,pos])
 
-    def create_food(self,how_much = FOOD_PER_MOVE):
-        """
-        if pos is None:
-            place = self.board.get_free_cell()
-            #plaсe = [plaсe//1000, plaсe % 1000]
-        self.board.food.append(pos)
-        """
+    def _create_food(self,how_much = FOOD_PER_MOVE):
         free_cells = self.board.free_cells()
         for cell in free_cells:
             prob = how_much / len(free_cells)
@@ -117,9 +112,11 @@ class Board(object):
         self.food = food
         self.max_id = 0
 
+    # FIXME: not class method
     def get_free_cell(self):
         return choice(self.free_cells())
 
+    # FIXME: not class method
     def free_cells(self):
         result = []
         field = self.raw_field()
@@ -134,6 +131,9 @@ class Board(object):
             return ''.join(map(str, map(lambda x: ' ' if x is None else x, lst)))
 
         return '\n'.join([line(line_list) for line_list in self.field()])
+
+    def at(self, i, j):
+        pass
 
     def raw_field(self):
         field = deepcopy(self.map)
@@ -173,6 +173,13 @@ class Game_State(object):
         self.food = food
         self.snakes = snakes
         self.map = map
+    
+    def at(self, i, j):
+        pass
+    
+    def snake(self, id):
+        pass
+
 
 class Snake(object):
     def __init__(self, id_snake, alg = Algorithm()):
