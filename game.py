@@ -123,8 +123,7 @@ class MainApp(App):
         self.game_screen.add_widget(make_move_button)
 
     def reset_game_mode(self, _):
-        self.game = Game()
-        self.game.create_snake(alg=RandomAlgorithm(), pos=[2, 8])
+        self.game = Game([(RandomAlgorithm(), [2, 2])])
 
         self.main_layout.remove_widget(self.main_layout.children[0])
         self.main_layout.add_widget(self.game_screen)

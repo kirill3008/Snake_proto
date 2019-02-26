@@ -71,8 +71,8 @@ def search_min_dist(snake_coord, food_coord_list):
                     (snake_coord[1]-coord[1])**2)**0.5
         cur_dist = min(cur_dist,new_dist)
     return cur_dist
-        
-        
+
+
 class FirstStupidAlgorithm(Algorithm):
     def __init__(self):
         super(Algorithm, self).__init__()
