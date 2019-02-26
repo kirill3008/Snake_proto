@@ -9,7 +9,7 @@ from kivy.core.audio import SoundLoader
 
 import os
 
-from algorithm import RightAlgorithm, FirstStupidAlgorithm, RandomAlgorithm
+from algorithm import *
 from config import FIELD_WIDTH, FIELD_HEIGHT
 from main import Game, Wall, Food, SnakeHead, SnakeTail
 

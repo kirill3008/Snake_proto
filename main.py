@@ -25,12 +25,12 @@ def free_cells(board):
     return result
 
 class Game(object):
-    def __init__(self,algorithms_list,start_position_list):
+    def __init__(self,snakes_params_list):
         self.food = []
         self.board = Board(self.food)
         self.game_over = False
-        for i in range(len(algorithms_list)):
-            self._create_snake(alg=algorithms_list[i],pos=start_position_list[i])
+        for snake_params in snakes_params_list:
+            self._create_snake(alg=snake_params[0],pos=snake_params[1])
 
     def _create_snake(self,alg=None,pos=None):
         if pos is None:
@@ -248,14 +248,3 @@ class SnakeTail(object):
         pass
     def __str__(self):
         return '~'
-
-
-def main():
-    game = Game([LeftAlgorithm()],[[6,8]])
-    print(game.board)
-    while game.is_game_over()==False:
-        game.move()
-        print(game.board)
-
-#cProfile.run("main()")
-main()

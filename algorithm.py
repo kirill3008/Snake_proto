@@ -1,5 +1,9 @@
 from random import choice
 
+
+__all__ = ["LeftAlgorithm", "RightAlgorithm", "EndlessAlgorithm", "RandomAlgorithm", "FirstStupidAlgorithm"]
+
+
 class Algorithm(object):
     def __init__(self):
         pass
