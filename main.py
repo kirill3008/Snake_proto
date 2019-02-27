@@ -56,9 +56,9 @@ class Game(object):
         return self.game_over
 
     def move(self):
-        Game_state = Game_State(self.food,self.board.snakes,self.board.map,self.board.field())
+        game_state = GameState(self.food,self.board.snakes,self.board.map,self.board.field())
         for snake in self.board.snakes:
-            direction = snake[0].move(Game_state,snake[1])
+            direction = snake[0].move(game_state)
             if direction == 'up':
                 snake[1][0]-=1
             elif direction == 'down':
@@ -158,7 +158,6 @@ class Board(object):
         return result
 
 
-    
 def inversed(dir):
     dic = {
         'left':'right',
@@ -168,16 +167,16 @@ def inversed(dir):
     }
     return dic[dir]
 
-class Game_State(object):
-    def __init__(self,food,snakes,map,field):
+class GameState(object):
+    def __init__(self, food, snakes, map, field):
         self.food = food
         self.snakes = snakes
         self.map = map
-        self.field  =field
-    
+        self.field = field
+
     def at(self, i, j):
         return field[i][j]
-    
+
     def snake(self, id):
         for i in self.snakes:
             if i[0].id_snake == id:
@@ -195,9 +194,9 @@ class Snake(object):
     def get_struct(self):
         return self.skelet
 
-    def move(self,Game_state,self_pos):
-        dir = self.alg.get_dir(Game_state,self_pos,self.skelet)
-        self.skelet.insert(0,inversed(dir))
+    def move(self, game_state):
+        dir = self.alg.get_dir(game_state, self.id_snake)
+        self.skelet.insert(0, inversed(dir))
         if self.food > 0:
             self.food -= 1
         else:

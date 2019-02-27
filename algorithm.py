@@ -8,18 +8,18 @@ class Algorithm(object):
     def __init__(self):
         pass
 
-    def get_dir(self,Game_state,self_pos,self_struct):
+    def get_dir(self, game_state, snake_id):
         raise RuntimeError("Not implemented in base class")
 
 
 class LeftAlgorithm(Algorithm):
-    def get_dir(self,Game_state,self_pos,self_struct):
+    def get_dir(self,Game_state,snake_id):
         direction = 'left'
         return direction
 
 
 class RightAlgorithm(Algorithm):
-    def get_dir(self,Game_state,self_pos,self_struct):
+    def get_dir(self, game_state, snake_id):
         direction = 'right'
         return direction
 
@@ -29,7 +29,7 @@ class EndlessAlgorithm(Algorithm):
         super(Algorithm, self).__init__()
         self.turn_number = -1
 
-    def get_dir(self,Game_state,self_pos,self_struct):
+    def get_dir(self, game_state, snake_id):
         self.turn_number += 1
         return {
             0: "left",
@@ -44,14 +44,15 @@ class EndlessAlgorithm(Algorithm):
 
 
 class RandomAlgorithm(Algorithm):
-    def get_dir(self, snakes,food,map,self_pos,self_struct):
-        print("Snakes:", snakes)
+    def get_dir(self, game_state, snake_id):
         walls = []
-        for i in range(len(map)):
-            for j in range(len(map[0])):
-                if map[i][j]:
+        snake, self_pos = game_state.snake(snake_id)
+        for i in range(len(game_state.map)):
+            for j in range(len(game_state.map[0])):
+                if game_state.field[i][j] is not None:
                     walls.append((i, j))
-        bodies = sum([s[0].body() for s in snakes], [])
+        bodies = sum([s[0].body() for s in game_state.snakes], [])
+        #print("Bodies:", bodies)
         y, x = self_pos
         variants = zip(
             [(y-1, x), (y, x-1), (y+1, x), (y, x+1)],
@@ -60,7 +61,7 @@ class RandomAlgorithm(Algorithm):
         variants = list(filter(lambda item: not item[0] in bodies and not item[0] in walls, variants))
         if not variants:
             return 'left'
-        print("Variants:", variants)
+        #print("Variants:", variants)
         return choice(variants)[1]
 
 
@@ -90,13 +91,13 @@ class FirstStupidAlgorithm(Algorithm):
         }
         self.last_dir = 'None'
     
-    def get_dir(self,Game_state,self_pos,self_struct):
+    def get_dir(self,game_state,snake_id):
         food = Game_state.food
         min_dist = 9000000
         self_posit = []
-        pos = self_pos
+        snake,pos = game_state.snake(snake_id)
         dir = choice(['left','right','up','down'])
-        for i in self_struct:
+        for i in snake.skelet:
             pos = (pos[0]+self.dir_to_coord[i][0],pos[1]+self.dir_to_coord[i][1])
             self_posit.append(pos)
         if food:
