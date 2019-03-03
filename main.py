@@ -55,9 +55,12 @@ class Game(object):
 
     def is_game_over(self):
         return self.game_over
+    
+    def get_game_state(self):
+        return  GameState(self.food,self.board.snakes,self.board.map,self.board.field())
 
     def move(self):
-        game_state = GameState(self.food,self.board.snakes,self.board.map,self.board.field())
+        game_state = self.get_game_state()
         for snake in self.board.snakes:
             direction = snake[0].move(game_state)
             if direction == 'up':

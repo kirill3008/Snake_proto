@@ -60,7 +60,7 @@ class RandomAlgorithm(Algorithm):
 
 
 def search_min_dist(snake_coord, food_coord_list):
-    cur_dist = 90000
+    cur_dist = 9999999999
     for coord in food_coord_list:
         new_dist = ((snake_coord[0]-coord[0])**2 + 
                     (snake_coord[1]-coord[1])**2)**0.5
@@ -77,25 +77,10 @@ class FirstStupidAlgorithm(Algorithm):
             'up':(-1,0),
             'down':(1,0)
         }
-        self.inverse = {
-            'left':'right',
-            'right':'left',
-            'up':'down',
-            'down':'up'
-        }
-        self.last_dir = 'None'
     
     def get_dir(self,game_state,snake_id):
         food = game_state.food
-        min_dist = 9000000
-        snake,self_pos = game_state.snake(snake_id)
-        dist_to_fruits = {}
-        if food:
-            for i in self.dir_to_coord.keys():
-                new_self_coord = (self_pos[0] + self.dir_to_coord[i][0],self_pos[1] + self.dir_to_coord[i][1])
-                distance = search_min_dist(new_self_coord,food)
-                print(i)
-                dist_to_fruits[i] = distance
+        snake,self_pos = game_state.snake(snake_id)   
         y, x = self_pos
         variants = zip(
             [(y-1, x), (y, x-1), (y+1, x), (y, x+1)],
@@ -103,14 +88,20 @@ class FirstStupidAlgorithm(Algorithm):
         )
         variants = list(filter(lambda item: type(game_state.field[item[0][0]][item[0][1]]) in [Food, type(None)], variants))
         if not variants:
-            return 'left'
+            return choice(['up', 'left', 'down', 'right'])
         if food:
+            dist_to_fruits = {}
+            for i in self.dir_to_coord.keys():
+                new_self_coord = (self_pos[0] + self.dir_to_coord[i][0],self_pos[1] + self.dir_to_coord[i][1])
+                distance = search_min_dist(new_self_coord,food)
+                print(i)
+                dist_to_fruits[i] = distance
             result = []
             for i in variants:
                 result.append((i[1],dist_to_fruits[i[1]]))
-            ans = ('',min_dist)
+            ans = ('',-1)
             for i in result:
-                if i[1]<ans[1]:
+                if ([1]<ans[1]) or (ans[1] = -1):
                     ans = i
             dir = ans[0]
         else:
