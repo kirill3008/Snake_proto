@@ -3,6 +3,7 @@ from copy import deepcopy
 
 from algorithm import LeftAlgorithm, RightAlgorithm, Algorithm, EndlessAlgorithm, FirstStupidAlgorithm
 from config import *
+from common import *
 from exceptions import InternalError
 
 import cProfile
@@ -181,6 +182,12 @@ class GameState(object):
         for i in self.snakes:
             if i[0].id_snake == id:
                 return i
+    def all_cells(self, id):
+        snake = self.snake(id)
+        result = []
+        for i in snake[0].body():
+            result.append([snake[1][0]+i[0],snake[1][1]+i[1]])
+        return result
 
 
 class Snake(object):
@@ -206,7 +213,6 @@ class Snake(object):
     def eat(self):
         self.food += FOOD_COST
 
-
     def body(self):
         result = []
         x = 0
@@ -223,30 +229,3 @@ class Snake(object):
             result.append((x,y))
         return result
 
-
-class Wall(object):
-    def __init__(self):
-        pass
-
-    def __repr__(self):
-        return '#'
-
-
-class Food(object):
-    def __init__(self):
-        pass
-
-    def __repr__(self):
-        return '*'
-
-
-class SnakeHead(object):
-    def __init__(self,id_snake):
-        self.id_snake = id_snake
-    def __str__(self):
-        return 'O'
-class SnakeTail(object):
-    def __init__(self):
-        pass
-    def __str__(self):
-        return '~'

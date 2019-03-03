@@ -1,5 +1,7 @@
 from random import choice
 
+from common import *
+
 
 __all__ = ["LeftAlgorithm", "RightAlgorithm", "EndlessAlgorithm", "RandomAlgorithm", "FirstStupidAlgorithm"]
 
@@ -45,23 +47,25 @@ class EndlessAlgorithm(Algorithm):
 
 class RandomAlgorithm(Algorithm):
     def get_dir(self, game_state, snake_id):
-        walls = []
-        snake, self_pos = game_state.snake(snake_id)
+        """
+        occupied = []
         for i in range(len(game_state.map)):
             for j in range(len(game_state.map[0])):
-                if game_state.field[i][j] is not None:
-                    walls.append((i, j))
-        bodies = sum([s[0].body() for s in game_state.snakes], [])
+                if not (type(game_state.field[i][j]) in[None,Food]):
+                    occupied.append((i, j))
+        """
+        #bodies = sum([s[0].body() for s in game_state.snakes], [])
         #print("Bodies:", bodies)
+        snake, self_pos = game_state.snake(snake_id)
         y, x = self_pos
         variants = zip(
             [(y-1, x), (y, x-1), (y+1, x), (y, x+1)],
             ['up', 'left', 'down', 'right']
         )
-        variants = list(filter(lambda item: not item[0] in bodies and not item[0] in walls, variants))
+        variants = list(filter(lambda item: type(game_state.field[item[0][0]][item[0][1]]) in [Food, type(None)], variants))
+        #print("Variants:", variants)
         if not variants:
             return 'left'
-        #print("Variants:", variants)
         return choice(variants)[1]
 
 

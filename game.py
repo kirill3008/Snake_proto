@@ -6,7 +6,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.config import Config
 from kivy.core.audio import SoundLoader
-
+from kivy.clock import Clock
 import os
 
 from algorithm import *
@@ -27,6 +27,7 @@ BUTTON_COLOR = [.97,.69,.59,1]
 
 class MainApp(App):
     def build(self):
+        
         sound = SoundLoader.load('muzlome_Metallica_-_Sad_But_True_47954412.mp3')
         sound.play()
 
@@ -107,7 +108,7 @@ class MainApp(App):
         )
 
         make_move_button = Button(
-            text='Make move', on_press=self.make_move,
+            text='Start game', on_press=self.start_game,
             size_hint=[0.25, 0.1], pos_hint={'center_x': 1.30, 'center_y': 0.4},
             background_color=BUTTON_COLOR, background_normal=''
         )
@@ -128,10 +129,13 @@ class MainApp(App):
         self.main_layout.remove_widget(self.main_layout.children[0])
         self.main_layout.add_widget(self.game_screen)
 
-    def make_move(self, _): # FIXME not class method
-        if self.game.is_game_over() == False:
-            self.game.move()
+    def start_game(self, _): # FIXME not class method
+        Clock.schedule_interval(self.make_move, 0.1)
+
+    def make_move(self,_):
+        self.game.move()
         self.board.refresh(self.game.board)
+        return not self.game.is_game_over()
 
     def set_start_mode(self, _):
         pass
@@ -162,10 +166,16 @@ class BoardWidget(GridLayout):
             self.image_board.append(image_line)
 
     def refresh(self, game_board):
+        def snake_pictures_by_coord(snake):
+            result = {}
+            points = 
+            
+            
+            
         type_to_picture = { # FIXME: consider snake directions
             type(None): 'nothing.png',
-            SnakeHead: 'head_right.png',
-            SnakeTail: 'hor.png',
+            #SnakeHead: 'head_right.png',
+            #SnakeTail: 'hor.png',
             Wall: 'tree.png',
             Food: 'food.png'
         }
