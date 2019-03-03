@@ -101,7 +101,7 @@ class FirstStupidAlgorithm(Algorithm):
                 result.append((i[1],dist_to_fruits[i[1]]))
             ans = ('',-1)
             for i in result:
-                if ([1]<ans[1]) or (ans[1] = -1):
+                if ([1]<ans[1]) or (ans[1] == -1):
                     ans = i
             dir = ans[0]
         else:
