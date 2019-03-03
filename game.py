@@ -28,8 +28,8 @@ BUTTON_COLOR = [.97,.69,.59,1]
 class MainApp(App):
     def build(self):
         
-        sound = SoundLoader.load('muzlome_Metallica_-_Sad_But_True_47954412.mp3')
-        sound.play()
+        #sound = SoundLoader.load('muzlome_Metallica_-_Sad_But_True_47954412.mp3')
+        #sound.play()
 
         self.create_start_screen()
         self.create_game_screen()
@@ -124,7 +124,7 @@ class MainApp(App):
         self.game_screen.add_widget(make_move_button)
 
     def reset_game_mode(self, _):
-        self.game = Game([(RandomAlgorithm(), [2, 2])])
+        self.game = Game([(FirstStupidAlgorithm(), [2, 2])])
 
         self.main_layout.remove_widget(self.main_layout.children[0])
         self.main_layout.add_widget(self.game_screen)
@@ -168,7 +168,7 @@ class BoardWidget(GridLayout):
     def refresh(self, game_board):
         def snake_pictures_by_coord(snake):
             result = {}
-            points = 
+            points = ''
             
             
             

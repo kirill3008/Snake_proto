@@ -47,15 +47,6 @@ class EndlessAlgorithm(Algorithm):
 
 class RandomAlgorithm(Algorithm):
     def get_dir(self, game_state, snake_id):
-        """
-        occupied = []
-        for i in range(len(game_state.map)):
-            for j in range(len(game_state.map[0])):
-                if not (type(game_state.field[i][j]) in[None,Food]):
-                    occupied.append((i, j))
-        """
-        #bodies = sum([s[0].body() for s in game_state.snakes], [])
-        #print("Bodies:", bodies)
         snake, self_pos = game_state.snake(snake_id)
         y, x = self_pos
         variants = zip(
@@ -63,7 +54,6 @@ class RandomAlgorithm(Algorithm):
             ['up', 'left', 'down', 'right']
         )
         variants = list(filter(lambda item: type(game_state.field[item[0][0]][item[0][1]]) in [Food, type(None)], variants))
-        #print("Variants:", variants)
         if not variants:
             return 'left'
         return choice(variants)[1]
@@ -96,20 +86,33 @@ class FirstStupidAlgorithm(Algorithm):
         self.last_dir = 'None'
     
     def get_dir(self,game_state,snake_id):
-        food = Game_state.food
+        food = game_state.food
         min_dist = 9000000
-        self_posit = []
-        snake,pos = game_state.snake(snake_id)
-        dir = choice(['left','right','up','down'])
-        for i in snake.skelet:
-            pos = (pos[0]+self.dir_to_coord[i][0],pos[1]+self.dir_to_coord[i][1])
-            self_posit.append(pos)
+        snake,self_pos = game_state.snake(snake_id)
+        dist_to_fruits = {}
         if food:
             for i in self.dir_to_coord.keys():
                 new_self_coord = (self_pos[0] + self.dir_to_coord[i][0],self_pos[1] + self.dir_to_coord[i][1])
                 distance = search_min_dist(new_self_coord,food)
-                if distance <=min_dist and self.inverse[self.last_dir]!=i and (new_self_coord not in self_posit):
-                    dir = i
-                    min_dist = distance
-        self.last_dir = dir 
+                print(i)
+                dist_to_fruits[i] = distance
+        y, x = self_pos
+        variants = zip(
+            [(y-1, x), (y, x-1), (y+1, x), (y, x+1)],
+            ['up', 'left', 'down', 'right']
+        )
+        variants = list(filter(lambda item: type(game_state.field[item[0][0]][item[0][1]]) in [Food, type(None)], variants))
+        if not variants:
+            return 'left'
+        if food:
+            result = []
+            for i in variants:
+                result.append((i[1],dist_to_fruits[i[1]]))
+            ans = ('',min_dist)
+            for i in result:
+                if i[1]<ans[1]:
+                    ans = i
+            dir = ans[0]
+        else:
+            dir = choice(variants)[1]
         return dir
